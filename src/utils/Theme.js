@@ -22,10 +22,15 @@ const Theme = createTheme({
     text: {
       main: '#2C2E50',
       headerdetail: 'rgba(145, 147, 166, 1)',
-      textdetails: 'rgba(44, 46, 80, 1)'
+      textdetails: 'rgba(44, 46, 80, 1)',
+      message: '#000000',
     },
     list: {
       item: 'rgba(0, 153, 255, 0.05)'
+    },
+    bubble: {
+      main: '#ffffff',
+      secondary: '#ECFFF7'
     }
   },
   typography: {
@@ -83,6 +88,12 @@ const Theme = createTheme({
       fontSize: 16,
       fontWeight: 500,
       lineHeight: 1.24,
+    },
+    caption: {
+      fontFamily: 'Poppins',
+      fontSize: 14,
+      fontWeight: 400,
+      lineHeight: '18px',
     },
     button: {
       fontFamily: 'Poppins',

@@ -11,7 +11,7 @@ import Box from '@mui/material/Box';
 
 function Contact() {
   return (
-    <Grid item lg={12} container direction="column">
+    <Grid container direction="column">
       <Avatar alt="Avatar" src={avatar_default} sx={{ width: 138, height: 138,  mx: 'auto', mt: 64 }} />
       <Typography variant="body1" color="text.main" sx={{ mt: 18,  mx: 'auto' }}>Lucía García</Typography>
       <Typography variant="body2" color="text.main" sx={{ mt: 3, mx: 'auto' }}>5520260240</Typography>

@@ -21,7 +21,7 @@ function BubbleChatIcon(props) {
 
 function UserProfile() {
   return (
-    <Grid item lg={12} container direction="column">
+    <Grid container direction="column">
       <Avatar alt="Avatar" src={avatar_default} sx={{ width: 104, height: 104,  mx: 'auto', mt: 64 }} />
       <Typography variant="body1" color="text.main" sx={{ mt: 18,  mx: 'auto' }}>Alejandro García</Typography>
       <Typography variant="body2" color="text.main" sx={{ mt: 3, mb: 74, mx: 'auto' }}>55 2026 0240</Typography>
