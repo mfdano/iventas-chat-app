@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { ThemeProvider } from '@mui/material/styles';
-import Button from '@mui/material/Button';
 import Login from "./views/Login";
+import User from "./views/User";
 import Theme from "./utils/Theme";
 
 import './css/app.css';
@@ -23,10 +23,6 @@ function App() {
       </div>
     </Router>
   );
-}
-
-function User() {
-  return <Button variant="contained">User World</Button>;
 }
 
 export default App;
