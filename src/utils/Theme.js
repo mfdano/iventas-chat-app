@@ -13,13 +13,20 @@ const Theme = createTheme({
     },
     background: {
       default: '#f3f4f8',
-      secondary: '#f6f8fc',
-      text: '#ffffff'
+      secondary: '#f6f8fc'
     },
     button: {
       main: '#20CC81',
       contrastText: '#fff',
     },
+    text: {
+      main: '#2C2E50',
+      headerdetail: 'rgba(145, 147, 166, 1)',
+      textdetails: 'rgba(44, 46, 80, 1)'
+    },
+    list: {
+      item: 'rgba(0, 153, 255, 0.05)'
+    }
   },
   typography: {
     fontFamily: 'Source Sans Pro',
@@ -41,11 +48,41 @@ const Theme = createTheme({
       fontWeight: 700,
       lineHeight: 1.2,
     },
+    h4: {
+      fontFamily: 'Poppins',
+      fontSize: 14,
+      fontWeight: 700,
+      lineHeight: 1.2,
+    },
+    h5: {
+      fontFamily: 'Poppins',
+      fontSize: 12,
+      fontWeight: 500,
+      lineHeight: 1.2,
+    },
     subtitle1: {
       fontFamily: 'Inter',
       fontSize: 16,
       fontWeight: 700,
       lineHeight: 1.54,
+    },
+    subtitle2: {
+      fontFamily: 'Poppins',
+      fontSize: 14,
+      fontWeight: 600,
+      lineHeight: 1.2,
+    },
+    body1: {
+      fontFamily: 'Poppins',
+      fontSize: 18,
+      fontWeight: 700,
+      lineHeight: 1.24,
+    },
+    body2: {
+      fontFamily: 'Poppins',
+      fontSize: 16,
+      fontWeight: 500,
+      lineHeight: 1.24,
     },
     button: {
       fontFamily: 'Poppins',
