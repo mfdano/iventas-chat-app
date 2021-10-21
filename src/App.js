@@ -1,35 +1,32 @@
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
+import Login from "./views/Login";
+import Theme from "./utils/Theme";
+
+import './css/app.css';
 
 function App() {
   return (
-    <div className="App">
-      <Button variant="contained">Hello World</Button>
-    </div>
+    <Router>
+      <div className="App">
+        <ThemeProvider theme={Theme}>
+          <Switch>
+            <Route path="/" exact>
+              <Login />
+            </Route>
+            <Route path="/user/:userId">
+              <User />
+            </Route>
+          </Switch>
+        </ThemeProvider>
+      </div>
+    </Router>
   );
 }
-/*
-import logo from './logo.svg';
-import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+function User() {
+  return <Button variant="contained">User World</Button>;
 }
-*/
+
 export default App;
