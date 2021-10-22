@@ -25,7 +25,9 @@ function BubbleMessage(props) {
 
   const renderAvatar = () => {
     if (props.isfirst) {
-      return <Avatar alt="Avatar" src={avatar_default} sx={{ width: 40, height: 40, mr: 10, ml: 10}} />;
+      return <Avatar alt="Avatar"
+      src={avatar_default}
+      sx={{ width: 40, height: 40, mr: props.sentbyme ? 10 : 0, ml:  props.sentbyme ? 0 : 10}} />;
     }
   }
 
@@ -33,8 +35,8 @@ function BubbleMessage(props) {
     <Grid direction={ props.sentbyme ? "row": "row-reverse" }
       container
       mt={ props.isfirst ? 24 : 0 }
-      pl={ props.isfirst ? 0 : 58 }
-      pr={ props.isfirst ? 0 : 58 }
+      pl={ props.isfirst ? 0 : 48 }
+      pr={ props.isfirst ? 0 : 48 }
       justifyContent="flex-start"
       alignItems="flex-start" >
       { renderAvatar() }

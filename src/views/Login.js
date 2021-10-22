@@ -9,7 +9,7 @@ import CustomInput from "../views/CustomInput";
 function Login() {
   return (
     <div className="Login">
-      <Grid container direction="row" className="main-container">
+      <Grid container direction="row" sx={{ height: '100vh' }}>
         <Grid item lg={4} sx={{ bgcolor: 'background.default' }} container justifyContent="center" alignItems="center">
           <img src={main} alt="main" className="main-img" />
         </Grid>

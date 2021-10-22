@@ -24,6 +24,7 @@ const Theme = createTheme({
       headerdetail: 'rgba(145, 147, 166, 1)',
       textdetails: 'rgba(44, 46, 80, 1)',
       message: '#000000',
+      light: '#ffffff'
     },
     list: {
       item: 'rgba(0, 153, 255, 0.05)'
@@ -31,6 +32,9 @@ const Theme = createTheme({
     bubble: {
       main: '#ffffff',
       secondary: '#ECFFF7'
+    },
+    input: {
+      background: '#ffffff'
     }
   },
   typography: {
@@ -94,6 +98,12 @@ const Theme = createTheme({
       fontSize: 14,
       fontWeight: 400,
       lineHeight: '18px',
+    },
+    input: {
+      fontFamily: 'Poppins',
+      fontSize: 15,
+      fontWeight: 500,
+      lineHeight: 1.24,
     },
     button: {
       fontFamily: 'Poppins',
