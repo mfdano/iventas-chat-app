@@ -18,6 +18,7 @@ const Theme = createTheme({
     button: {
       main: '#20CC81',
       contrastText: '#fff',
+      loader: '#fff'
     },
     text: {
       main: '#2C2E50',
@@ -34,7 +35,8 @@ const Theme = createTheme({
       secondary: '#ECFFF7'
     },
     input: {
-      background: '#ffffff'
+      background: '#ffffff',
+      default: '#F6F8FC',
     }
   },
   typography: {
@@ -104,6 +106,12 @@ const Theme = createTheme({
       fontSize: 15,
       fontWeight: 500,
       lineHeight: 1.24,
+    },
+    input2: {
+      fontFamily: 'Source Sans Pro',
+      fontSize: 16,
+      fontWeight: 400,
+      lineHeight: '20px',
     },
     button: {
       fontFamily: 'Poppins',

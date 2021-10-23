@@ -20,6 +20,10 @@ const LoginButtonRoot = styled('button')(({ theme }) => ({
   '&:active': {
     backgroundColor: theme.palette.primary.main,
   },
+  '&:disabled': {
+    opacity: 0.5,
+    cursor: 'not-allowed',
+  },
 }));
 
 /*
