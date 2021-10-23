@@ -40,7 +40,10 @@ function BubbleMessage(props) {
       justifyContent="flex-start"
       alignItems="flex-start" >
       { renderAvatar() }
-      <BubbleMessageContainer { ...props } className={ classes.bubblecolor } sx={{ maxWidth: '55%', mb: 4, pt: 12, pb: 12, pl: 20, pr: 20 }} >
+      <BubbleMessageContainer
+        { ...props }
+        className={ classes.bubblecolor }
+        sx={{ maxWidth: '55%', mb: 4, pt: 12, pb: 12, pl: 20, pr: 20 }} >
         <Typography variant="caption" color="text.message" sx={{ mx: 'auto' }}>
           { props.message }
         </Typography>
