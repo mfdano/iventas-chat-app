@@ -15,8 +15,13 @@ async function makeRequest(method, path, params) {
   return response.json();
 }
 
-async function getMessages(chatId) {
-  const result = await makeRequest('GET', `${'messages'}?chatId=${chatId}`);
+async function getChat(userId, lastDate, limit) {
+  const result = await makeRequest('GET', `${'chats'}?userId=${userId}&lastDate=${lastDate}&limit=${limit}`);
+  return result;
+}
+
+async function getMessages(chatId, lastDate, limit) {
+  const result = await makeRequest('GET', `${'messages'}?chatId=${chatId}&lastDate=${lastDate}&limit=${limit}`);
   return result;
 }
 
@@ -30,5 +35,4 @@ async function login(email, password) {
   return result;
 }
 
-
-export{ getMessages, login };
+export{ getMessages, login, getChat };

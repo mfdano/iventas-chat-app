@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { ThemeProvider } from '@mui/material/styles';
 import Login from "./views/Login";
-import User from "./views/User";
+import UserChat from "./views/UserChat";
 import Theme from "./utils/Theme";
 
 import './css/app.css';
@@ -15,8 +15,8 @@ function App() {
             <Route path="/" exact>
               <Login />
             </Route>
-            <Route path="/user/:userId">
-              <User />
+            <Route path="/user">
+              <UserChat />
             </Route>
           </Switch>
         </ThemeProvider>

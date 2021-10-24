@@ -10,12 +10,12 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import BubbleChatIcon from "./BubbleChatIcon";
 
-function UserProfile() {
+function UserProfile(props) {
   return (
     <Grid container direction="column">
       <Avatar alt="Avatar" src={avatar_default} sx={{ width: 104, height: 104,  mx: 'auto', mt: 64 }} />
-      <Typography variant="body1" color="text.main" sx={{ mt: 18,  mx: 'auto' }}>Alejandro García</Typography>
-      <Typography variant="body2" color="text.main" sx={{ mt: 3, mb: 74, mx: 'auto' }}>55 2026 0240</Typography>
+      <Typography variant="body1" color="text.main" sx={{ mt: 18,  mx: 'auto' }}>{props.user.name}</Typography>
+      <Typography variant="body2" color="text.main" sx={{ mt: 3, mb: 74, mx: 'auto' }}>{props.user.phoneNumber}</Typography>
       <List>
         <ListItem disablePadding>
           <ListItemButton sx={{ pl: 50,  height: 100, bgcolor: 'list.item' }}>

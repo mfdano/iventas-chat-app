@@ -6,6 +6,7 @@ const MessageInput = styled(TextareaAutosize)(({ theme }) => ({
   backgroundColor: theme.palette.input.background,
   width: '90%',
   height: 18,
+  maxheight: 18,
   borderRadius: 21,
   paddingTop: 14,
   paddingBottom: 14,

@@ -1,7 +1,7 @@
 import main from '../img/main.svg';
 import '../css/login.css';
 import React, { useState, useEffect } from 'react';
-import { Redirect, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -30,8 +30,7 @@ function Login() {
   const onClickBtnLogin = async (e) => {
     try {
       setIsLoggingIn(true);
-      console.log(email, password);
-      const response = await login('dano@email.com', '12345678');
+      const response = await login(email, password);
       setUserId(response.id);
       setIsLogInCompleted(true);
     } catch(e) {
@@ -43,8 +42,7 @@ function Login() {
   };
 
   useEffect(() => {
-    if (isLogInCompleted) history.push(`/user/${userId}`);
-    //console.log('useEffect')
+    if (isLogInCompleted) history.push(`/user?id=${userId}`);
   }, [isLoggingIn]);
 
   return (

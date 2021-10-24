@@ -27,12 +27,12 @@ function BubbleMessage(props) {
     if (props.isfirst) {
       return <Avatar alt="Avatar"
       src={avatar_default}
-      sx={{ width: 40, height: 40, mr: props.sentbyme ? 10 : 0, ml:  props.sentbyme ? 0 : 10}} />;
+      sx={{ width: 40, height: 40, mr: props.sentbyme ? 0 : 10, ml:  props.sentbyme ? 10 : 0 }} />;
     }
   }
 
   return (
-    <Grid direction={ props.sentbyme ? "row": "row-reverse" }
+    <Grid direction={ props.sentbyme ? "row-reverse": "row" }
       container
       mt={ props.isfirst ? 24 : 0 }
       pl={ props.isfirst ? 0 : 48 }
