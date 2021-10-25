@@ -14,18 +14,23 @@ import LoginButton from "../views/LoginButton";
 import CustomInput from "../views/CustomInput";
 
 import { login } from '../services/Service';
-import { isValidEmail } from '../utils/Validation';
+import { isValidEmail, isValidPassword } from '../utils/Validation';
 
 function Login() {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [openedAlert, setOpenedAlert] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [isWarning, setIsWarning] = useState(false);
+  const [isErrorEmail, setIsErrorEmail] = useState(false);
+  const [isErrorPassword, setIsErrorPassword] = useState(false);
+  const [appStatus, setAppStatus] = useState({});
+  const [onNotify, setOnNotify] = useState(false);
   const [userId, setUserId] = useState('');
   const [isLogInCompleted, setIsLogInCompleted] = useState(false);
   const history = useHistory();
+
+  useEffect(() => {
+    if (isLogInCompleted) history.push(`/user?id=${userId}`);
+  }, [isLoggingIn]);
   
   const onClickBtnLogin = async (e) => {
     try {
@@ -34,26 +39,46 @@ function Login() {
       setUserId(response.id);
       setIsLogInCompleted(true);
     } catch(e) {
-      setIsError(true)
-      setOpenedAlert(true)
+      setAppStatus({ status: 'error', message: e.message });
+      setOnNotify(true);
     } finally {
       setIsLoggingIn(false);
     }
   };
 
-  useEffect(() => {
-    if (isLogInCompleted) history.push(`/user?id=${userId}`);
-  }, [isLoggingIn]);
+  const onChangeEmail = (e) => {
+    setEmail(e.target.value)
+    if (!isValidEmail(e.target.value.trim())) {
+      setIsErrorEmail(true)
+    } else {
+      setIsErrorEmail(false)
+      setEmail(e.target.value.trim())
+    }
+  };
+
+  const onChangePassword = (e) => {
+    setPassword(e.target.value)
+    if (!isValidPassword(e.target.value.trim())) {
+      setIsErrorPassword(true)
+    } else {
+      setIsErrorPassword(false)
+      setPassword(e.target.value.trim())
+    }
+  };
+
+  const onKeyPressAction = (e) => {
+    if (e.key === 'Enter') onClickBtnLogin(e)
+  };
 
   return (
     <div className="Login">
       <Snackbar
-        open={openedAlert}
+        open={onNotify}
         autoHideDuration={5000}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
-        <Alert severity="error" sx={{ width: '100%' }} onClose={() => { setOpenedAlert(false)}}>
-          Error al iniciar sesión, verifica tus credenciales.
+        <Alert severity={appStatus.status} sx={{ width: '100%' }} onClose={() => { setOnNotify(false)}}>
+          { appStatus.message }
         </Alert>
       </Snackbar>
       <Grid container direction="row" sx={{ height: '100vh' }}>
@@ -71,9 +96,10 @@ function Login() {
               placeholder="Ingresa tu correo"
               type="email"
               value={email}
-              error={isError}
+              error={isErrorEmail}
+              helperText={isErrorEmail ? "Correo no válido." : ""}
               fullWidth
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={onChangeEmail}
             />
             <Typography variant="subtitle1" color="secondary.subtitle" sx={{ mb: 4, mt: 33 }}>Contraseña</Typography>
             <CustomInput
@@ -82,12 +108,19 @@ function Login() {
               placeholder="Ingresa tu contraseña"
               type="password"
               value={password}
-              error={isError}
+              error={isErrorPassword}
+              helperText={isErrorPassword ? "Mínimo 8 caracteres." : ""}
               fullWidth
-              onChange={(e) => setPassword(e.target.value)}
+              onKeyPress={onKeyPressAction}
+              onChange={onChangePassword}
             />
             <Box sx={{mt: 150, position: 'relative', textAlign: 'center' }}>
-              <LoginButton onClick={ onClickBtnLogin } disabled={isLoggingIn} size="small">Iniciar Sesión</LoginButton>
+              <LoginButton
+                onClick={ onClickBtnLogin }
+                disabled={isLoggingIn  || (isErrorEmail || isErrorPassword) || (email.length === 0 || password.length === 0)}
+                size="small">
+                  Iniciar Sesión
+              </LoginButton>
               {isLoggingIn && (
                 <CircularProgress
                   size={24}
