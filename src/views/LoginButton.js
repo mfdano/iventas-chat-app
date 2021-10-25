@@ -26,22 +26,6 @@ const LoginButtonRoot = styled('button')(({ theme }) => ({
   },
 }));
 
-/*
-  &.${buttonUnstyledClasses.focusVisible} {
-    box-shadow: 0 4px 20px 0 rgba(61, 71, 82, 0.1), 0 0 0 5px rgba(0, 127, 255, 0.5);
-    outline: none;
-  }
-
-  &.${buttonUnstyledClasses.disabled} {
-    opacity: 0.5;
-    cursor: not-allowed;
-    box-shadow: 0 0 0 0 rgba(0, 127, 255, 0);
-  }
-`);
-*/
-
-
-
 function LoginButton(props) {
   return <ButtonUnstyled {...props} component={LoginButtonRoot} />;
 }

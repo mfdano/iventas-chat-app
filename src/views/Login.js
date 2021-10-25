@@ -1,5 +1,4 @@
 import main from '../img/main.svg';
-import '../css/login.css';
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -71,7 +70,7 @@ function Login() {
   };
 
   return (
-    <div className="Login">
+    <div id="Login">
       <Snackbar
         open={onNotify}
         autoHideDuration={5000}
@@ -81,14 +80,18 @@ function Login() {
           { appStatus.message }
         </Alert>
       </Snackbar>
-      <Grid container direction="row" sx={{ height: '100vh' }}>
+      <Grid container direction="row" sx={{ height: '100vh', width: ['90%','90%','90%','100%','100%',], mx: 'auto' }}>
         <Grid item lg={4} sx={{ bgcolor: 'background.default' }} container justifyContent="center" alignItems="center">
-          <img src={main} alt="main" className="main-img" />
+          <img src={main} alt="main" style={{ maxWidth: 340, width: '50%' }}/>
         </Grid>
         <Grid item lg={8} sx={{ bgcolor: 'background.secondary' }} container justifyContent="center" alignItems="center">
           <Grid item lg={4} sx={{ bgcolor: 'background.secondary' }} direction="column" container>
             <form>
-            <Typography variant="h3" sx={{ textAlign: 'center', mb: 147 }}>Iniciar Sesión</Typography>
+            <Typography
+              variant="h3"
+              sx={{ textAlign: 'center', mb: [50, 50, 50, 147, 147], fontSize: [25, 25, 25, 40, 40] }}>
+                Iniciar Sesión
+            </Typography>
             <Typography variant="subtitle1" color="secondary.subtitle" sx={{ mb: 4 }}>Correo</Typography>
             <CustomInput
               id="email"
@@ -114,7 +117,7 @@ function Login() {
               onKeyPress={onKeyPressAction}
               onChange={onChangePassword}
             />
-            <Box sx={{mt: 150, position: 'relative', textAlign: 'center' }}>
+            <Box sx={{ mt: [60, 60, 60, 150, 150], position: 'relative', textAlign: 'center' }}>
               <LoginButton
                 onClick={ onClickBtnLogin }
                 disabled={isLoggingIn  || (isErrorEmail || isErrorPassword) || (email.length === 0 || password.length === 0)}
