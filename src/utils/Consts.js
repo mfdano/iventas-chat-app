@@ -1,5 +1,5 @@
 const MESSAGES_FETCHING_LIMIT = 15;
-const SERVICE_URL = 'http://18.220.226.146';
+const SERVICE_URL = 'https://fast-reef-20357.herokuapp.com';
 const MOBILE_BREAKPOINT = 600;
 
 export{ MESSAGES_FETCHING_LIMIT, SERVICE_URL, MOBILE_BREAKPOINT };
