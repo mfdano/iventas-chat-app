@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch } from "react-router-dom";
 import { GuardProvider, GuardedRoute } from 'react-router-guards';
 
 import { ThemeProvider } from '@mui/material/styles';
@@ -9,7 +9,6 @@ import { checkAuth } from './services/Service'
 
 function App() {
   const check = async (to, from, next) => {
-    console.log('check!!!!')
     try {
       const response = await checkAuth();
       if (to.meta.route === 'login') next.redirect(`/user?id=${response.id}`);

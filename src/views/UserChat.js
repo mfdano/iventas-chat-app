@@ -58,26 +58,29 @@ function UserChat() {
 
   useEffect(() => {
     socket.on('on_server_message', (incomingMessage) => {
-      console.log('on_server_message')
       onIncomingMessage(incomingMessage)
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
 
   useEffect(() => {
     setUserData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onIncomingMessage = (incomingMessage) => {
-    console.log('onIncomingMessage')
     setMessages((messages) => {
-      incomingMessage.isFirst = incomingMessage.senderId !== messages[messages.length - 1].senderId;
+      if (messages.length === 0) {
+        incomingMessage.isFirst = true;
+      } else {
+        incomingMessage.isFirst = incomingMessage.senderId !== messages[messages.length - 1].senderId;
+      }
       return [...messages, incomingMessage]
     });
     scrollToMessage(incomingMessage.id);
   };
 
   const onClickBtnSendMsg = (e) => {
-    console.log('on_client_message')
     let cleanedMsg = newMessage.replace(/^[\s\uFEFF\xA0]+/g, '')
       .replace(/[\s\uFEFF\xA0]+$/g, '')
     if (cleanedMsg.length > 0) {
@@ -112,7 +115,6 @@ function UserChat() {
   const loadOldMessages = async () => {
     try {
       setIsLoadingMessages(true);
-      console.log('IsOldLoadingMessages', MESSAGES_FETCHING_LIMIT, messages.length)
       const lastLoadedMessage = messages[0];
       const oldMessages = await getMessages(chatId, lastLoadedMessage.sentDate, MESSAGES_FETCHING_LIMIT);
 
@@ -133,7 +135,6 @@ function UserChat() {
   const onScrollMessages = (e) => {
     const isOnTop = e.target.scrollTop === 0;
     if (isOnTop && theresMoreMessages) {
-      console.log('isOnTop', messages.length)
       loadOldMessages();
     }
   }

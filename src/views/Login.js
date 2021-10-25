@@ -29,6 +29,7 @@ function Login() {
 
   useEffect(() => {
     if (isLogInCompleted) history.push(`/user?id=${userId}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggingIn]);
   
   const onClickBtnLogin = async (e) => {
