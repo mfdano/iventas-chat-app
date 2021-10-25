@@ -11,6 +11,9 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import IconButton from '@mui/material/IconButton';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 
 import Contact from "./Contact";
 import UserProfile from "./UserProfile";
@@ -21,7 +24,7 @@ import SendIcon from "./SendIcon";
 import { useLocation } from "react-router-dom";
 
 import { getMessages, getChat } from '../services/Service';
-import { MESSAGES_FETCHING_LIMIT, SERVICE_URL  } from '../utils/Consts';
+import { MESSAGES_FETCHING_LIMIT, SERVICE_URL, MOBILE_BREAKPOINT  } from '../utils/Consts';
 
 import io from "socket.io-client";
 const socket = io(SERVICE_URL, {
@@ -42,9 +45,16 @@ function UserChat() {
   const [theresMoreMessages, setTheresMoreMessages] = useState(true);
   const [appStatus, setAppStatus] = useState({});
   const [onNotify, setOnNotify] = useState(false);
+  const [width, setWidth] = useState(window.innerWidth);
+  const [isDrawerShowed, setIsDrawerShowed] = useState(false);
 
   const messagesBottomRef = useRef(null);
   const query = useQuery();
+
+  useEffect(() => {
+    window.addEventListener('resize', handleWindowSizeChange);
+    return () => {  window.removeEventListener('resize', handleWindowSizeChange); }
+  }, []);
 
   useEffect(() => {
     socket.on('on_server_message', (incomingMessage) => {
@@ -68,21 +78,23 @@ function UserChat() {
 
   const onClickBtnSendMsg = (e) => {
     console.log('on_client_message')
-    setNewMessage('');
-    socket.emit('on_client_message', {
-      chatId: chatId,
-      senderId: user.id,
-      content: newMessage,
-      sentDate: Date.now(),
-    });
+    let cleanedMsg = newMessage.replace(/^[\s\uFEFF\xA0]+/g, '')
+      .replace(/[\s\uFEFF\xA0]+$/g, '')
+    if (cleanedMsg.length > 0) {
+      socket.emit('on_client_message', {
+        chatId: chatId,
+        senderId: user.id,
+        content: cleanedMsg,
+        sentDate: Date.now(),
+      });
+      setNewMessage('')
+    }
   };
 
   const setUserData = async () => {
     try {
       const userId = query.get('id');
       const chat = await getChat(userId, Date.now(), MESSAGES_FETCHING_LIMIT);
-      //console.log('setUserData', JSON.stringify(chat, null, 2))
-      //console.log(JSON.stringify(chat, null, 2))
       setChatId(chat.id);
       setMessages(chat.messages.reverse());
       setUser(chat.users.find(user => user.id === userId));
@@ -126,22 +138,39 @@ function UserChat() {
     }
   }
 
+  const onClickMoreInfo = (e) => {
+    setIsDrawerShowed(true);
+  };
+
   const scrollToBottom = () => {
     messagesBottomRef.current.scrollIntoView({ behavior: "smooth" });
   }
 
   const scrollToMessage = (msgId) => {
-    console.log('scrollToMessage', msgId)
     const focusedMessage = document.getElementById(`message_${msgId}`)
     focusedMessage.scrollIntoView({ behavior: "smooth" });
   }
 
-  const onKeyPressAction = (e) => {
-    if (e.key === 'Enter') console.log('on send')
-  };
+  const onKeyPressAction = (e) => {};
+
+  const onOpenDrawer = (e) => {};
+
+  const onCloseDrawer = (e) => { setIsDrawerShowed(false) };
+
+  function handleWindowSizeChange() {
+    setWidth(window.innerWidth);
+  }
 
   return (
     <Grid container direction="row" sx={{ height: '100vh' }}>
+      <SwipeableDrawer
+        anchor="bottom"
+        open={isDrawerShowed}
+        onClose={onCloseDrawer}
+        onOpen={onOpenDrawer}
+      >
+        <Contact contact={ contact }/>
+      </SwipeableDrawer>
       <Snackbar
         open={onNotify}
         autoHideDuration={5000}
@@ -152,24 +181,41 @@ function UserChat() {
         </Alert>
       </Snackbar>
       <Backdrop
-        sx={{ color: '#fff', zIndex: 10 }}
+        sx={{ color: '#fff', zIndex: 10, pt: '10vh' }}
         open={isLoadingData}
       >
         <CircularProgress color="inherit" />
       </Backdrop>
-      <Grid item lg={2} sx={{ bgcolor: 'background.secondary' }} container>
-        <UserProfile user={user} />
-      </Grid>
+      {width > MOBILE_BREAKPOINT && (
+        <Grid item lg={2} sx={{ bgcolor: 'background.secondary' }} container>
+          <UserProfile user={user} />
+        </Grid>
+      )}
       <Grid item lg={8} sx={{ bgcolor: 'background.default' }} direction="column" container>
-        <Grid sx={{ pl: 48, pr: 53, pt: 12, pb: 10 , height: '8vh' }} direction="row" container bgcolor="primary.main">
-          <Avatar alt="Avatar" src={contact.imageProfileSRC} sx={{ width: 52, height: 52 }} />
-          <Typography variant="body1" color="text.light" sx={{ ml: 32, mt: 13 }}>{contact.name}</Typography>
+        <Grid
+          sx={{
+            pl: [24, 24, 24, 48, 48],
+            pr:  [24, 24, 24, 53, 53],
+            pt: [6, 6, 6, 12, 12],
+            pb: [6, 6, 6, 10, 10],
+            height: ['9vh', '9vh', '9vh', '8vh', '8vh'],
+            position: 'fixed', zIndex: 5
+          }}
+          direction="row" container bgcolor="primary.main"
+        >
+          <Avatar alt="Avatar" src={contact.imageProfileSRC} sx={{ width: [44, 44, 44, 52, 52], height: [44, 44, 44, 52, 52] }} />
+          <Typography variant="body1" color="text.light" sx={{ ml: 32, mt: 13, fontSize: [14, 14, 14, 18, 18] }}>{contact.name}</Typography>
+          {width <= MOBILE_BREAKPOINT && (
+            <IconButton aria-label="info" sx={{ color: 'primary.main', right: 6, top: 6, position: 'absolute'}} onClick={ onClickMoreInfo }>
+              <MoreVertIcon sx={{ color: '#ffffff', fontSize: 30 }}  />
+            </IconButton>
+          )}
         </Grid>
         <Grid
-          sx={{ height: '82vh' }}
+          sx={{ height: '90vh' }}
           direction="column"
           container>
-            <Box sx={{pl: 48, pr: 53, pt: 20, pb: 20, height: '100%' }}
+            <Box sx={{pl: [20, 20, 20, 48, 48], pr: [20, 20, 20, 53, 53], pt: '8vh', pb: 20, height: '100%' }}
               style={{ overflowY: 'auto', overflowX: 'hidden' }}
               onScroll={onScrollMessages}
             >
@@ -187,6 +233,7 @@ function UserChat() {
                   isfirst={msg.isFirst ? 1 : 0}
                   message={msg.content}
                   key={msg.id}
+                  ismobile={width < MOBILE_BREAKPOINT ? 1 : 0}
                   imgsrc={user.id === msg.senderId ? user.imageProfileSRC : contact.imageProfileSRC }
                   id={'message_' + msg.id}
                 />
@@ -195,22 +242,36 @@ function UserChat() {
             </Box>
         </Grid>
         <Divider light />
-        <Grid sx={{ pl: 22, pr: 0, pt: 20, pb: 20 , height: '9vh' }}
+        <Grid sx={{ pl: 10, pr: 0, pt: [10, 10, 10, 20, 20], pb: 20 , height: '9vh' }}
           direction="row"
           container
           bgcolor="background.secondary">
             <MessageInput
+              sx={{
+                width: ['75%', '75%', '75%', '90%', '90%'],
+                height: [14, 14, 14, 18, 18]
+              }}
               maxRows={1}
               placeholder="Escribe un mensaje..."
               value={ newMessage }
               onChange={(e) => setNewMessage(e.target.value)}
               onKeyPress={onKeyPressAction} />
-            <SendIcon sx={{ width: 45, height: 45, ml: 10 }} style={{ cursor: 'pointer' }} onClick={ onClickBtnSendMsg } />
+            <SendIcon
+              sx={{
+                ml: 10,
+                width: [35, 35, 35, 45, 45],
+                height: [35, 35, 35, 45, 45]
+              }}
+              style={{ cursor: 'pointer', right: '2%' }}
+              onClick={ onClickBtnSendMsg }
+            />
         </Grid>
       </Grid>
-      <Grid item lg={2} sx={{ bgcolor: 'background.secondary' }} container>
-        <Contact contact={ contact } />
-      </Grid>
+      {width > MOBILE_BREAKPOINT && (
+        <Grid item lg={2} sx={{ bgcolor: 'background.secondary', zIndex: 10 }} container>
+          <Contact contact={ contact } />
+        </Grid>
+      )}
     </Grid>
   );
 }

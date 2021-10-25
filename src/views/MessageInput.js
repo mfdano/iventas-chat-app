@@ -4,7 +4,7 @@ import { styled } from '@mui/system';
 const MessageInput = styled(TextareaAutosize)(({ theme }) => ({
   ...theme.typography.input,
   backgroundColor: theme.palette.input.background,
-  width: '90%',
+  // width: '100%',
   height: 18,
   maxheight: 18,
   borderRadius: 21,
