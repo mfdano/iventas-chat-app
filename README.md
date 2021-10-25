@@ -13,6 +13,9 @@ Frontend repository made with React.
 $ npm install
 ```
 
+## Set Up SERVICE_URL=http://localhost:5000 at src/utils/Constants.js
+
+
 ## Running the app
 
 ```bash
