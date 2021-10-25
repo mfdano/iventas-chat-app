@@ -1,5 +1,4 @@
 import '../css/user.css';
-import avatar_default from '../img/avatar_default.png';
 
 import React, { useState, useEffect, useRef } from 'react';
 
@@ -22,10 +21,10 @@ import SendIcon from "./SendIcon";
 import { useLocation } from "react-router-dom";
 
 import { getMessages, getChat } from '../services/Service';
-import { MESSAGES_FETCHING_LIMIT  } from '../utils/Consts';
+import { MESSAGES_FETCHING_LIMIT, SERVICE_URL  } from '../utils/Consts';
 
 import io from "socket.io-client";
-const socket = io("http://localhost:5000", {
+const socket = io(SERVICE_URL, {
   withCredentials: true,
   extraHeaders: {}
 });
@@ -40,6 +39,7 @@ function UserChat() {
   const [contact, setContact] = useState({});
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
+  const [theresMoreMessages, setTheresMoreMessages] = useState(true);
   const [appStatus, setAppStatus] = useState({});
   const [onNotify, setOnNotify] = useState(false);
 
@@ -47,15 +47,24 @@ function UserChat() {
   const query = useQuery();
 
   useEffect(() => {
-    socket.on('on_server_message', (data) => {
+    socket.on('on_server_message', (incomingMessage) => {
       console.log('on_server_message')
-      console.log(JSON.stringify(data, null, 2))
+      onIncomingMessage(incomingMessage)
     });
   }, [socket]);
 
   useEffect(() => {
     setUserData()
   }, []);
+
+  const onIncomingMessage = (incomingMessage) => {
+    console.log('onIncomingMessage')
+    setMessages((messages) => {
+      incomingMessage.isFirst = incomingMessage.senderId !== messages[messages.length - 1].senderId;
+      return [...messages, incomingMessage]
+    });
+    scrollToMessage(incomingMessage.id);
+  };
 
   const onClickBtnSendMsg = (e) => {
     console.log('on_client_message')
@@ -69,17 +78,18 @@ function UserChat() {
   };
 
   const setUserData = async () => {
-    // console.log('fetch last messages of', query.get('id'))
     try {
       const userId = query.get('id');
       const chat = await getChat(userId, Date.now(), MESSAGES_FETCHING_LIMIT);
+      //console.log('setUserData', JSON.stringify(chat, null, 2))
+      //console.log(JSON.stringify(chat, null, 2))
       setChatId(chat.id);
       setMessages(chat.messages.reverse());
       setUser(chat.users.find(user => user.id === userId));
       setContact(chat.users.filter(user => user.id !== userId)[0]);
     } catch(err) {
-      console.log(err)
-      setAppStatus({ status: 'error', message: 'Error al obtener datos de usuario.'})
+      if (parseInt(err.message) === 401) {setAppStatus({ status: 'error', message: 'Tu sesión ha expirado, vuelve a ingresar.'})}
+      else setAppStatus({ status: 'error', message: 'Error al obtener datos de usuario.'})
       setOnNotify(true)
     } finally {
       scrollToBottom()
@@ -90,15 +100,16 @@ function UserChat() {
   const loadOldMessages = async () => {
     try {
       setIsLoadingMessages(true);
-      console.log('IsOldLoadingMessages', MESSAGES_FETCHING_LIMIT)
-      
+      console.log('IsOldLoadingMessages', MESSAGES_FETCHING_LIMIT, messages.length)
       const lastLoadedMessage = messages[0];
       const oldMessages = await getMessages(chatId, lastLoadedMessage.sentDate, MESSAGES_FETCHING_LIMIT);
-      //console.log(JSON.stringify(oldMessages, null, 2))
-      
 
-      setMessages([...oldMessages.reverse(), ...messages])
-      scrollToMessage(oldMessages[oldMessages.length - 1].id);      
+      if (oldMessages.length === 0) {
+        setTheresMoreMessages(false)
+      } else {
+        setMessages([...oldMessages.reverse(), ...messages])
+        scrollToMessage(oldMessages[oldMessages.length - 1].id);      
+      }
     } catch(err) {
       setAppStatus({ status: 'error', message: 'Error al cargar mensajes anteriores.'})
       setOnNotify(true)
@@ -109,7 +120,8 @@ function UserChat() {
 
   const onScrollMessages = (e) => {
     const isOnTop = e.target.scrollTop === 0;
-    if (isOnTop) {
+    if (isOnTop && theresMoreMessages) {
+      console.log('isOnTop', messages.length)
       loadOldMessages();
     }
   }
@@ -119,9 +131,14 @@ function UserChat() {
   }
 
   const scrollToMessage = (msgId) => {
+    console.log('scrollToMessage', msgId)
     const focusedMessage = document.getElementById(`message_${msgId}`)
     focusedMessage.scrollIntoView({ behavior: "smooth" });
   }
+
+  const onKeyPressAction = (e) => {
+    if (e.key === 'Enter') console.log('on send')
+  };
 
   return (
     <Grid container direction="row" sx={{ height: '100vh' }}>
@@ -145,7 +162,7 @@ function UserChat() {
       </Grid>
       <Grid item lg={8} sx={{ bgcolor: 'background.default' }} direction="column" container>
         <Grid sx={{ pl: 48, pr: 53, pt: 12, pb: 10 , height: '8vh' }} direction="row" container bgcolor="primary.main">
-          <Avatar alt="Avatar" src={avatar_default} sx={{ width: 52, height: 52 }} />
+          <Avatar alt="Avatar" src={contact.imageProfileSRC} sx={{ width: 52, height: 52 }} />
           <Typography variant="body1" color="text.light" sx={{ ml: 32, mt: 13 }}>{contact.name}</Typography>
         </Grid>
         <Grid
@@ -156,6 +173,11 @@ function UserChat() {
               style={{ overflowY: 'auto', overflowX: 'hidden' }}
               onScroll={onScrollMessages}
             >
+              {!theresMoreMessages && (
+                <Alert severity="info">
+                  <Typography variant="body2" color="text.main" >Inicio de la conversación</Typography>
+                </Alert>
+              )}
               {isLoadingMessages && (
                 <CircularProgress color="primary" sx={{ position: 'absolute', left: '50%' }} size={30} />
               )}
@@ -165,6 +187,7 @@ function UserChat() {
                   isfirst={msg.isFirst ? 1 : 0}
                   message={msg.content}
                   key={msg.id}
+                  imgsrc={user.id === msg.senderId ? user.imageProfileSRC : contact.imageProfileSRC }
                   id={'message_' + msg.id}
                 />
               ))}
@@ -177,9 +200,11 @@ function UserChat() {
           container
           bgcolor="background.secondary">
             <MessageInput
+              maxRows={1}
               placeholder="Escribe un mensaje..."
               value={ newMessage }
-              onChange={(e) => setNewMessage(e.target.value)} />
+              onChange={(e) => setNewMessage(e.target.value)}
+              onKeyPress={onKeyPressAction} />
             <SendIcon sx={{ width: 45, height: 45, ml: 10 }} style={{ cursor: 'pointer' }} onClick={ onClickBtnSendMsg } />
         </Grid>
       </Grid>

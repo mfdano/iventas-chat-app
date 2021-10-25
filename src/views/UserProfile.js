@@ -1,5 +1,3 @@
-import avatar_default from '../img/avatar_default.png';
-
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
@@ -13,7 +11,7 @@ import BubbleChatIcon from "./BubbleChatIcon";
 function UserProfile(props) {
   return (
     <Grid container direction="column">
-      <Avatar alt="Avatar" src={avatar_default} sx={{ width: 104, height: 104,  mx: 'auto', mt: 64 }} />
+      <Avatar alt="Avatar" src={props.user.imageProfileSRC} sx={{ width: 104, height: 104,  mx: 'auto', mt: 64 }} />
       <Typography variant="body1" color="text.main" sx={{ mt: 18,  mx: 'auto' }}>{props.user.name}</Typography>
       <Typography variant="body2" color="text.main" sx={{ mt: 3, mb: 74, mx: 'auto' }}>{props.user.phoneNumber}</Typography>
       <List>

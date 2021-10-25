@@ -3,7 +3,6 @@ import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar'
 import { styled } from '@mui/system';
 import { makeStyles } from '@mui/styles';
-import avatar_default from '../img/avatar_default.png';
 
 const useStyles = makeStyles((theme) => ({
   bubblecolor:(props) => ({
@@ -26,7 +25,7 @@ function BubbleMessage(props) {
   const renderAvatar = () => {
     if (props.isfirst) {
       return <Avatar alt="Avatar"
-      src={avatar_default}
+      src={props.imgsrc}
       sx={{ width: 40, height: 40, mr: props.sentbyme ? 0 : 10, ml:  props.sentbyme ? 10 : 0 }} />;
     }
   }
@@ -44,7 +43,7 @@ function BubbleMessage(props) {
         { ...props }
         className={ classes.bubblecolor }
         sx={{ maxWidth: '55%', mb: 4, pt: 12, pb: 12, pl: 20, pr: 20 }} >
-        <Typography variant="caption" color="text.message" sx={{ mx: 'auto' }}>
+        <Typography variant="caption" color="text.message" sx={{ mx: 'auto' }} style={{ whiteSpace: 'pre-line' }}>
           { props.message }
         </Typography>
       </BubbleMessageContainer>
