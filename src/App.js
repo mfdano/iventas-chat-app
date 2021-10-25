@@ -9,6 +9,7 @@ import { checkAuth } from './services/Service'
 
 function App() {
   const check = async (to, from, next) => {
+    console.log('check!!!!')
     try {
       const response = await checkAuth();
       if (to.meta.route === 'login') next.redirect(`/user?id=${response.id}`);
